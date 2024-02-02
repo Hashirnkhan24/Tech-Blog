@@ -3,7 +3,7 @@ import About from './About'
 import SignIn from './SignIn'
 import SignUp from './SignUp'
 import Dashboard from './Dashboard'
-import Projects from './Projects'
+import Articles from './Articles'
 
 export {
     Home,
@@ -11,5 +11,5 @@ export {
     SignIn,
     SignUp,
     Dashboard,
-    Projects,
+    Articles,
 }
