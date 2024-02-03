@@ -2,17 +2,16 @@ import { signupValidator } from "../types.js";
 import User from "../models/user.model.js"
 import bcryptjs from "bcryptjs"
 
-const signup = async(req, res) => {
+const signup = async(req, res, next) => {
     const { username, email, password } = req.body;
     const parsedSignupValidator = signupValidator.safeParse({username, email, password});
     
         try {
-            if(!parsedSignupValidator) {
-                res.status(411).send({
+            if(!parsedSignupValidator.success) {
+                return res.status(411).send({
                     message: "Invalid inputs"
                 })
             }
-
             // Creating User
             const hashedPassword = bcryptjs.hashSync(password, 10)
 
@@ -25,12 +24,9 @@ const signup = async(req, res) => {
             res.status(200).json({
                 message: "User created successfully"
             })
-            
+
         } catch (error) {
-            console.log(error);
-            res.status(400).json({
-                message : "Signup failed"
-            })
+            next(error)
         }
 }
 

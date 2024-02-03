@@ -9,7 +9,7 @@ export default function Header() {
         <Navbar className="border-b-2 shadow-md">
             {/* Logo */}
             <Link to="/" className="self-center whitespace-nowrap text-sm sm:text-xl font-semibold dark:text-white">
-                <span className="px-2 py-1 bg-gradient-to-r from-red-800 via-red-700 to-red-600 mx-1 rounded-sm">Tech</span>
+                <span className="px-2 py-1 text-white bg-gradient-to-r from-red-800 via-red-700 to-red-600 mx-1 rounded-sm">Tech</span>
                 Blog
             </Link>
             {/* Search Bar */}
