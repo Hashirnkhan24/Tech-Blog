@@ -18,8 +18,9 @@ export default function SignUp() {
             setErrorMessage('Please fill in all the fields')
         }
         try {
-            setErrorMessage(null)
+            // setErrorMessage(null)
             setLoading(true)
+            // POST Request for sign-up
             const res = await fetch('/api/auth/signup', {
                 method: 'POST',
                 headers: {
@@ -42,7 +43,7 @@ export default function SignUp() {
     }
 
     return (
-        <section className="min-h-screen">
+        <section className="min-h-screen shadow-xl">
             <div className="flex flex-col p-3 max-w-3xl mx-auto sm:flex-row sm:items-center">
                 {/* left */}
                 <div className="flex-1 mr-2 py-16 sm:pt-32 flex flex-col items-center sm:items-start">
