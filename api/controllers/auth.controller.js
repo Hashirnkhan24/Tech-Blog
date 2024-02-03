@@ -7,7 +7,7 @@ const signup = async(req, res, next) => {
     const parsedSignupValidator = signupValidator.safeParse({username, email, password});
     
         try {
-            if(!parsedSignupValidator.success) {
+            if(!(parsedSignupValidator.success)) {
                 return res.status(411).send({
                     message: "Invalid inputs"
                 })
@@ -26,6 +26,14 @@ const signup = async(req, res, next) => {
             })
 
         } catch (error) {
+            console.error("Signup Error:", error);
+                if (error.code === 11000) {
+                  // Unique constraint violation (duplicate entry)
+                    return res.status(409).json({
+                        success: false,
+                        message: "Email or username is already in use",
+                    });
+                }
             next(error)
         }
 }
