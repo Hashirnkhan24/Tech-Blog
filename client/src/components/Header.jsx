@@ -1,9 +1,11 @@
-import { Button, Navbar, TextInput } from "flowbite-react"
+import { Avatar, Button, Dropdown, Navbar, TextInput } from "flowbite-react"
 import { Link, useLocation } from "react-router-dom"
 import { AiOutlineSearch } from "react-icons/ai"
 import { FaMoon } from "react-icons/fa"
+import { useSelector } from "react-redux"
 
 export default function Header() {
+    const { currentUser } = useSelector(state => state.user)
     const path = useLocation.pathname;
     return (
         <Navbar className="border-b-2 shadow-md">
@@ -31,11 +33,37 @@ export default function Header() {
                     <FaMoon />
                 </Button>
                 {/* Sign In Button */}
-                <Link to="/sign-in">
+                {currentUser 
+                ? (<Dropdown
+                    arrowIcon={false}
+                    inline
+                    label={
+                        <Avatar 
+                            alt='user'
+                            img={currentUser.profilePicture}
+                            rounded
+                        />
+                    }
+                    >
+                        <Dropdown.Header>
+                            <span className="text-md font-bold">@{currentUser.username}</span>
+                        </Dropdown.Header>
+                        <Link to="/dashboard?tab=profile">
+                            <Dropdown.Item>
+                                <span>Profile</span>
+                            </Dropdown.Item>
+                        </Link>
+                        <Dropdown.Divider />
+                        <Dropdown.Item>
+                            Sign Out
+                        </Dropdown.Item>
+                </Dropdown>)
+                :(<Link to="/sign-in">
                     <Button className="rounded-sm bg-gradient-to-r from-red-600 via-red-700 to-red-800 hover:bg-gradient-to-r hover:from-red-800 hover:via-red-700 hover:to-red-600">
                         Sign In
                     </Button>
-                </Link>
+                </Link>)}
+                
                 {/* Hamburger Nav */}
                 <Navbar.Toggle />
             </div>
