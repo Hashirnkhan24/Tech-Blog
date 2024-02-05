@@ -1,10 +1,11 @@
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { Alert, Button, TextInput } from "flowbite-react"
 import { useEffect, useRef, useState } from "react"
 import { getStorage, uploadBytesResumable, ref, getDownloadURL } from "firebase/storage"
 import { app } from "../firebase"
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
+import { updateFailure, updateSuccess, updateStart } from "../redux/user/userSlice"
 
 function DashProfile() {
     const { currentUser } = useSelector((state) => state.user)
@@ -12,7 +13,9 @@ function DashProfile() {
     const [imageFileUrl, setImageFileUrl] = useState(null)
     const [imageFileUploadProgress, setimageFileUploadProgress] = useState(null)
     const [imageFileUploadError, setImageFileUploadError] = useState(null)
+    const [formData, setFormData] = useState("")
     const filePickerRef = useRef()
+    const dispatch = useDispatch()
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
@@ -49,15 +52,46 @@ function DashProfile() {
                 console.error(error)
             },
             () => {
-                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) =>{setImageFileUrl(downloadURL)});
+                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) =>{setImageFileUrl(downloadURL)})
+                .then(() => setFormData({...formData, profilePicture: imageFileUrl}))
             }
         )
     }
 
+    const handleChange = (e) => {
+        setFormData({...formData, [e.target.id] : e.target.value})
+    }
+    
+    const handleSubmit = async(e) => {
+        e.preventDefault()
+        if(Object.keys(formData).length === 0) {
+            return;
+        }
+        try {
+            dispatch(updateStart())
+            
+            const res = await fetch(`http://localhost:3000/api/user/update/${currentUser._id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include',
+                body: JSON.stringify(formData)
+            })
+            const data = await res.json()
+            if(!res.ok) {
+                dispatch(updateFailure(data.message))
+            } else {
+                dispatch(updateSuccess(data))
+            }
+        } catch (error) {
+            dispatch(updateFailure(error.message))
+        }
+    }
     return (
         <div className="max-w-lg mx-auto w-full">
             <h1 className="mb-6 mt-8 text-2xl text-center font-semibold">Profile</h1>
-            <form className="flex flex-col gap-2">
+            <form className="flex flex-col gap-2" onSubmit={handleSubmit}>
                 <input type="file" accept="image/*" onChange={handleImageChange} ref={filePickerRef} className="hidden"/>
                 <div className="relative w-32 h-32 self-center cursor-pointer shadow-md overflow-hidden rounded-full mb-4">
                     {imageFileUploadProgress && imageFileUploadProgress < 100 && (
@@ -91,6 +125,7 @@ function DashProfile() {
                     defaultValue={currentUser.username} 
                     style={{borderRadius: "2px"}}
                     className="shadow-md"
+                    onChange={handleChange}
                 />
                 <TextInput 
                     type="email" 
@@ -99,6 +134,7 @@ function DashProfile() {
                     defaultValue={currentUser.email} 
                     style={{borderRadius: "2px"}}
                     className="shadow-md"
+                    onChange={handleChange}
                 />
                 <TextInput 
                     type="password" 
@@ -106,6 +142,7 @@ function DashProfile() {
                     id="password" 
                     style={{borderRadius: "2px"}}
                     className="shadow-md"
+                    onChange={handleChange}
                 />
                 <Button type="submit" className="rounded-sm bg-gradient-to-r from-slate-700 via-slate-600 to-slate-700 hover:bg-gradient-to-r hover:from-red-800 hover:via-red-700 hover:to-red-800 mt-2" >Update</Button>
             </form>

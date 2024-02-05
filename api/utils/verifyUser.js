@@ -2,7 +2,8 @@ import jwt from 'jsonwebtoken'
 import { errorHandler } from './error.js'
 
 export const verifyToken = (req, res, next) => {
-    const token = req.cookies.ACCESS_TOKEN
+    const token = req.cookies.access_token
+
     if(!token) {
         return res.status(411).json({
             message : "unauthorized"

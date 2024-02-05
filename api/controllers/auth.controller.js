@@ -59,8 +59,9 @@ const signin = async(req, res, next) => {
         const {password: pass, ...rest} = validUser._doc; //To seperate password as we dont want to send it to the client side
 
         res.status(200)
-        .cookie('ACCESS_TOKEN', token, {
-            httpOnly: true
+        .cookie('access_token', token, {
+            httpOnly: true,
+            sameSite: 'None',
         })
         .json(rest)
     } catch (error) {
@@ -75,7 +76,7 @@ const google = async(req, res, next) => {
         if(user) {
             const token = jwt.sign({id: user._id}, process.env.JWT_SECRET_KEY);
             const {password, ...rest} = user._doc;
-            res.status(200).cookie("ACCESS_TOKEN", token, {
+            res.status(200).cookie("access_token", token, {
                 httpOnly: true,
             }).json({rest})
         } else {
@@ -90,8 +91,9 @@ const google = async(req, res, next) => {
             await newUser.save()
             const {password, ...rest} = newUser._doc
             const token = jwt.sign({id: newUser._id}, process.env.JWT_SECRET_KEY)
-            res.status(200).cookie("ACCESS_TOKEN", token, {
+            res.status(200).cookie("access_token", token, {
                 httpOnly: true,
+                sameSite: 'None',
             }).json(rest)
         }
     } catch (error) {
