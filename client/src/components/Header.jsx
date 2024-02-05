@@ -12,7 +12,7 @@ export default function Header() {
     const dispatch = useDispatch()
     
     return (
-        <Navbar className="border-b-2 shadow-md">
+        <Navbar className="border-b-2 shadow-sm">
             {/* Logo */}
             <Link to="/" className="self-center whitespace-nowrap text-sm sm:text-xl font-semibold dark:text-white">
                 <span className="px-2 py-1 text-white bg-gradient-to-r from-red-800 via-red-700 to-red-600 mx-1 rounded-sm">Tech</span>
@@ -34,7 +34,7 @@ export default function Header() {
             {/* Theme Toggle Button */}
             <div className="flex gap-2 md:order-2">
                 <Button className="w-12 h-10 hidden sm:inline rounded-full bg-gradient-to-r from-red-800 to-red-600" onClick={() => dispatch(toggleTheme())}>
-                    {theme ? <FaSun />: <FaMoon />}
+                    {theme === "light" ? <FaSun />: <FaMoon />}
                 </Button>
                 {/* Sign In Button */}
                 {currentUser 
