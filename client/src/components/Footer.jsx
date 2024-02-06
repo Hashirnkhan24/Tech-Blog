@@ -7,7 +7,7 @@ export default function FooterCom() {
         <Footer className=" border-t border-slate-900 p-2 rounded-none">
             <div className="w-full max-w-7xl mx-auto">
             <div className="'grid w-full justify-between sm:flex md:grid-cols-1">
-            <div className="mt-5">
+            <div className="mt-5 sm:mt-14">
                 <Link to="/" className="self-center whitespace-nowrap text-sm sm:text-xl font-semibold dark:text-white">
                 <span className="px-2 py-1 text-white bg-gradient-to-r from-red-800 via-red-700 to-red-600 mx-1 rounded-sm">Tech</span>
                 Blog
@@ -75,15 +75,16 @@ export default function FooterCom() {
             </div>
             
             <Footer.Divider />
-            <div className='w-full sm:flex sm:items-center sm:justify-between'>
+            <div className='w-full flex items-center justify-center mb-3'>
                 <Footer.Copyright 
                     href="#"
                     year={new Date().getFullYear()}
                     by="Tech Blog"
+                    className="mx-auto"
                 />
             </div>
             <div>
-            <div className="flex gap-6 sm:mt-0 mt-4 sm:justify-center">
+            <div className="flex gap-6 sm:mt-0 mt-4 justify-center mb-3">
             <Footer.Icon href='#' icon={BsFacebook}/>
             <Footer.Icon href='#' icon={BsInstagram}/>
             <Footer.Icon href='#' icon={BsTwitter}/>

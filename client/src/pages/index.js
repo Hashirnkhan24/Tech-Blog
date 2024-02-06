@@ -4,6 +4,7 @@ import SignIn from './SignIn'
 import SignUp from './SignUp'
 import Dashboard from './Dashboard'
 import Articles from './Articles'
+import CreatePost from './CreatePost'
 
 export {
     Home,
@@ -12,4 +13,5 @@ export {
     SignUp,
     Dashboard,
     Articles,
+    CreatePost,
 }

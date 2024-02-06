@@ -7,6 +7,7 @@ import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import { signOutSuccess, updateFailure, updateSuccess, updateStart, deleteUserFailure, deleteUserStart, deleteUserSuccess } from "../redux/user/userSlice"
 import { HiOutlineExclamationCircle } from 'react-icons/hi'
+import { Link } from 'react-router-dom'
 
 function DashProfile() {
     const { currentUser, error } = useSelector((state) => state.user)
@@ -91,6 +92,7 @@ function DashProfile() {
         }
 
     }
+
     const handleSubmit = async(e) => {
         e.preventDefault()
         if(Object.keys(formData).length === 0) {
@@ -135,6 +137,10 @@ function DashProfile() {
             console.log(error.message)
         }
     }
+
+    const handleCreatePost = async() => {
+
+    }
     return (
         <div className="max-w-lg mx-auto w-full">
             <h1 className="mb-6 mt-8 text-2xl text-center font-semibold">Profile</h1>
@@ -177,7 +183,7 @@ function DashProfile() {
                     id="username" 
                     defaultValue={currentUser.username} 
                     style={{borderRadius: "2px"}}
-                    className="shadow-md"
+                    className="shadow-md mx-2"
                     onChange={handleChange}
                 />
                 <TextInput 
@@ -186,7 +192,7 @@ function DashProfile() {
                     id="email" 
                     defaultValue={currentUser.email} 
                     style={{borderRadius: "2px"}}
-                    className="shadow-md"
+                    className="shadow-md mx-2"
                     onChange={handleChange}
                 />
                 <TextInput 
@@ -194,12 +200,24 @@ function DashProfile() {
                     placeholder="password"  
                     id="password" 
                     style={{borderRadius: "2px"}}
-                    className="shadow-md"
+                    className="shadow-md mx-2"
                     onChange={handleChange}
                 />
-                <Button type="submit" className="rounded-sm bg-gradient-to-r from-slate-700 via-slate-600 to-slate-700 hover:bg-gradient-to-r hover:from-red-800 hover:via-red-700 hover:to-red-800 mt-2" >Update</Button>
+                <Button 
+                    type="submit" 
+                    className="mx-2 rounded-sm bg-gradient-to-r from-red-800 via-red-600 to-red-800 hover:bg-gradient-to-r hover:from-slate-800 hover:via-slate-700 hover:to-slate-800 mt-2"
+                    >Update
+                </Button>
+                {currentUser.isAdmin && (
+                    <Link to="/create-post" className="mx-2">
+                    <Button 
+                        onClick={handleCreatePost} 
+                        className=" w-full rounded-sm bg-gradient-to-r from-blue-700 via-blue-600 to-blue-700 hover:bg-gradient-to-r hover:from-slate-800 hover:via-slate-700 hover:to-slate-800 mt-2" >Create Post
+                    </Button>
+                    </Link>
+                )}
             </form>
-            <div className="flex justify-between text-red-500 mt-3">
+            <div className="flex justify-between text-red-500 mt-3 mx-3">
                 <span onClick={() => setShowModal(true)} className="hover:underline">Delete Account</span>
                 <span onClick={handleSignOut} className="hover:underline">Sign Out</span>
             </div>

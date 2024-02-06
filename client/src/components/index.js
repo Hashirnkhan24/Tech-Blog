@@ -5,7 +5,7 @@ import ThemeProvider from "./ThemeProvider";
 import RoutePrivate from "./RoutePrivate";
 import DashSidebar from "./DashSidebar";
 import DashProfile from "./DashProfile";
-
+import AdminRoutePrivate from "./OnlyAdminPrivateRoute";
 export {
     Header,
     Footer,
@@ -14,4 +14,5 @@ export {
     RoutePrivate,
     DashProfile,
     DashSidebar,
+    AdminRoutePrivate,
 }
