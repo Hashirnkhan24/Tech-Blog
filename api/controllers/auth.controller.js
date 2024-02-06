@@ -65,7 +65,7 @@ const signin = async(req, res, next) => {
         })
         .json(rest)
     } catch (error) {
-        return res.status(500).json({ message: "Internal Server Error"})
+        next(error)
     }
 }
 
