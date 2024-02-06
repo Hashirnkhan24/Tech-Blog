@@ -55,14 +55,15 @@ const signin = async(req, res, next) => {
             if(!validPassword) {
                 return res.status(411).json({ message: "Invalid Credentials"})
             }
-        const token = jwt.sign({id : validUser._id}, process.env.JWT_SECRET_KEY)
+        const token = jwt.sign({id : validUser._id, isAdmin: validUser.isAdmin}, process.env.JWT_SECRET_KEY)
         const {password: pass, ...rest} = validUser._doc; //To seperate password as we dont want to send it to the client side
 
-        res.status(200)
+        res
         .cookie('access_token', token, {
             httpOnly: true,
             sameSite: 'None',
         })
+        .status(200)
         .json(rest)
     } catch (error) {
         next(error)
@@ -74,11 +75,11 @@ const google = async(req, res, next) => {
     try {
         const user = await User.findOne({email})
         if(user) {
-            const token = jwt.sign({id: user._id}, process.env.JWT_SECRET_KEY);
+            const token = jwt.sign({id: user._id, isAdmin: user.isAdmin }, process.env.JWT_SECRET_KEY);
             const {password, ...rest} = user._doc;
-            res.status(200).cookie("access_token", token, {
+            res.cookie("access_token", token, {
                 httpOnly: true,
-            }).json({rest})
+            }).status(200).json({rest})
         } else {
             const generatedPassword = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8);
             const hashedPassword = bcryptjs.hashSync(generatedPassword, 10)
@@ -90,11 +91,13 @@ const google = async(req, res, next) => {
             })
             await newUser.save()
             const {password, ...rest} = newUser._doc
-            const token = jwt.sign({id: newUser._id}, process.env.JWT_SECRET_KEY)
-            res.status(200).cookie("access_token", token, {
+            const token = jwt.sign({id: newUser._id, isAdmin: newUser.isAdmin}, process.env.JWT_SECRET_KEY)
+            res.cookie("access_token", token, {
                 httpOnly: true,
                 sameSite: 'None',
-            }).json(rest)
+            })
+            .status(200)
+            .json(rest)
         }
     } catch (error) {
         next(error)

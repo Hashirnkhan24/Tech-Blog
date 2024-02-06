@@ -16,6 +16,7 @@ function DashProfile() {
     const [imageFileUploadError, setImageFileUploadError] = useState(null)
     const [formData, setFormData] = useState("")
     const [showModal, setShowModal] = useState(false)
+    const [showUpdateSuccess, setShowUpdateSuccess] = useState(false)
     const filePickerRef = useRef()
     const dispatch = useDispatch()
 
@@ -109,8 +110,10 @@ function DashProfile() {
             const data = await res.json()
             if(!res.ok) {
                 dispatch(updateFailure(data.message))
+                setShowUpdateSuccess(false)
             } else {
                 dispatch(updateSuccess(data))
+                setShowUpdateSuccess(true)
             }
         } catch (error) {
             dispatch(updateFailure(error.message))
@@ -164,6 +167,9 @@ function DashProfile() {
                 )}
                 {error && (
                     <Alert color={"failure"}>{error}</Alert>
+                )}
+                {showUpdateSuccess && (
+                    <Alert color={"success"} onClick={() => setShowUpdateSuccess(false)}>User updated successfully</Alert>
                 )}
                 <TextInput 
                     type="text" 
