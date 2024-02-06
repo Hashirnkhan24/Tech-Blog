@@ -5,7 +5,7 @@ import { getStorage, uploadBytesResumable, ref, getDownloadURL } from "firebase/
 import { app } from "../firebase"
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
-import { updateFailure, updateSuccess, updateStart, deleteUserFailure, deleteUserStart, deleteUserSuccess } from "../redux/user/userSlice"
+import { signOutSuccess, updateFailure, updateSuccess, updateStart, deleteUserFailure, deleteUserStart, deleteUserSuccess } from "../redux/user/userSlice"
 import { HiOutlineExclamationCircle } from 'react-icons/hi'
 
 function DashProfile() {
@@ -116,6 +116,22 @@ function DashProfile() {
             dispatch(updateFailure(error.message))
         }
     }
+
+    const handleSignOut = async() => {
+        try {
+            const res = await fetch('/api/user/signout', {
+                method: 'POST',
+            })
+            const data = await res.json()
+            if(!res.ok){
+                console.log(data.message)
+            } else {
+                dispatch(signOutSuccess())
+            }
+        } catch (error) {
+            console.log(error.message)
+        }
+    }
     return (
         <div className="max-w-lg mx-auto w-full">
             <h1 className="mb-6 mt-8 text-2xl text-center font-semibold">Profile</h1>
@@ -179,7 +195,7 @@ function DashProfile() {
             </form>
             <div className="flex justify-between text-red-500 mt-3">
                 <span onClick={() => setShowModal(true)} className="hover:underline">Delete Account</span>
-                <span className="hover:underline">Sign Out</span>
+                <span onClick={handleSignOut} className="hover:underline">Sign Out</span>
             </div>
             <Modal 
                 show={showModal}
