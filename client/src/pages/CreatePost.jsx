@@ -6,13 +6,16 @@ import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/
 import { app } from '../firebase'
 import { CircularProgressbar } from 'react-circular-progressbar'
 import 'react-circular-progressbar/dist/styles.css'
+import { useNavigate } from 'react-router-dom'
 
 function CreatePost() {
     const [file, setFile] = useState(null)
     const [imageUploadProgress, setimageUploadProgress] = useState(null);
     const [imageUploadError, setimageUploadError] = useState(null);
     const [formData, setFormData] = useState({});
-
+    const [publishError, setPublishError] = useState(null);
+    const navigate = useNavigate()
+    
     const handleUploadImage = async() => {
         try {
             if(!file) {
@@ -49,8 +52,29 @@ function CreatePost() {
             console.log(error)
         }
     }
-    const handleEditorInput = () => {}
 
+    const handleSubmit = async(e) => {
+        e.preventDefault()
+        try {
+            const res = await fetch('/api/post/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include',
+                body: JSON.stringify(formData)
+            })
+            const data = await res.json()
+            if(!res.ok) {
+                setPublishError(data.message)
+            }
+            setPublishError(null)
+            navigate(`/post/${data.slug}`)
+        } catch (error) {
+            console.log(error)
+            setPublishError("Something went wrong")
+        }
+    }
     return (
         <div className='min-h-screen flex flex-col md:flex-row'>
             <div className='md:w-56'>
@@ -60,7 +84,7 @@ function CreatePost() {
             {/* create post */}
             <div className="p-3 max-w-4xl mx-auto min-h-screen w-full">
                 <h1 className='my-7 text-3xl text-center font-semibold'>Create A Post</h1>
-                <form className='flex flex-col gap-4'>
+                <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
                     <div className='flex flex-col gap-4 sm:flex-row justify-between w-full'>
                         <TextInput 
                             type='text'
@@ -69,8 +93,12 @@ function CreatePost() {
                             id='title'
                             className='flex-1'
                             style={{borderRadius: '2px'}}
+                            onChange={(e) => setFormData({...formData, title: e.target.value})}
                         />
-                        <Select style={{borderRadius: '2px'}}>
+                        <Select 
+                            style={{borderRadius: '2px'}}
+                            onChange={(e) => setFormData({...formData, category: e.target.value})}
+                        >
                             <option value="uncategorized">Select a category</option>
                             <option value="javascript">JavaScript</option>
                             <option value="reactjs">React JS</option>
@@ -78,8 +106,8 @@ function CreatePost() {
                             <option value="nodejs">Node JS</option>
                         </Select>
                     </div>
-                    <div className='border-4 border-blue-600 border-dotted'>
-                    <div className='flex p-2 gap-4 items-center justify-between'>
+                    <div className=''>
+                    <div className='flex p-2 gap-4 items-center justify-between border-4 border-blue-600 border-dotted mb-2'>
                         <FileInput 
                             type="file" 
                             accept='images/*' 
@@ -114,17 +142,16 @@ function CreatePost() {
                                     <img 
                                         src={formData.image} 
                                         alt="image"
-                                        className='w-full h-76 object-cover' />
+                                        className='w-full h-72 object-cover' />
                             )
                         }
                     </div>
                     </div>
                     <Editor 
-                        
                         textareaName='content'
                         initialValue="Write your posts here..."
                         apiKey={import.meta.env.VITE_TINYMCE_KEY}
-                        onEditorChange={handleEditorInput}
+                        onEditorChange={(content) => setFormData({...formData, content: content})}
                         init={{
                             height: 500,
                             menubar: true,
@@ -157,6 +184,11 @@ function CreatePost() {
                         required
                     />
                     <Button type='submit' className='rounded-sm bg-gradient-to-r from-red-800 via-red-600 to-red-800 hover:from-blue-800 hover:via-blue-600 hover:to-blue-800 mb-2' >Publish</Button>
+                        {
+                            publishError && (
+                                <Alert color="failure" style={{borderRadius: '2px'}}>{publishError}</Alert>
+                            )
+                        }
                 </form>
             </div>
         </div>
