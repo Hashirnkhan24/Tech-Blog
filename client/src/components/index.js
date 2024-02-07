@@ -8,6 +8,7 @@ import DashProfile from "./DashProfile";
 import AdminRoutePrivate from "./OnlyAdminPrivateRoute";
 import DashPosts from "./DashPosts";
 import DashUsers from "./DashUsers";
+import CallToAction from "./CallToAction";
 
 export {
     Header,
@@ -20,4 +21,5 @@ export {
     AdminRoutePrivate,
     DashPosts,
     DashUsers,
+    CallToAction,
 }
