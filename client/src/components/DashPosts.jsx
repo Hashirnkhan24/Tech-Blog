@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react"
 import { useSelector } from 'react-redux'
-import { Table } from 'flowbite-react'
+import { Button, Table } from 'flowbite-react'
 import { Link } from 'react-router-dom'
 
 function DashPosts() {
     const [userPosts, setUserPosts]  = useState([])
+    const [showMore, setShowMore] = useState(true)
     const { currentUser } = useSelector((state) => state.user)
-    console.log(userPosts)
+    
     useEffect(() => {
         const fetchPosts = async () => {
             try {
@@ -14,6 +15,9 @@ function DashPosts() {
                 const data = await res.json()
                 if(res.ok) {
                     setUserPosts(data.posts)
+                    if(data.posts.length < 9) {
+                        setShowMore(false)
+                    }
                 }
             } catch (error) {
                 console.log(error.message)
@@ -25,6 +29,21 @@ function DashPosts() {
 
     }, [currentUser._id, currentUser.isAdmin])
     
+    const handleShowMore = async() => {
+        const startIndex = userPosts.length
+        try {
+            const res = await fetch(`/api/post/getposts?userId=${currentUser._id}&startIndex=${startIndex}`)
+            const data = await res.json()
+            if(res.ok) {
+                setUserPosts((prev) => [...prev, ...data.posts])
+                if(data.posts.length < 9) {
+                    setShowMore(false)
+                }
+            }
+        } catch (error) {
+            console.log(error.message)
+        }
+    }
     return (
         <div className="table-auto overflow-x-scroll md:mx-auto p-3 m-2 scrollbar-track-slate-100 scrollbar">
             {currentUser.isAdmin && userPosts.length > 0 
@@ -69,6 +88,9 @@ function DashPosts() {
                         </Table.Body>
                     ))}
                 </Table>
+                {showMore && (
+                    <button onClick={handleShowMore} className="w-full self-center text-blue-500 py-4 text-md hover:underline">Show More</button>
+                )}
             </>
             : (<p>You have no posts yet</p>)
         }
