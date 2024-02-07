@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Home, About, SignIn, SignUp, Dashboard, Articles, CreatePost } from './pages'
 import { Footer, Header, RoutePrivate, AdminRoutePrivate } from './components'
+import UpdatePost from './pages/UpdatePost'
 
 
 function App() {
@@ -20,7 +21,8 @@ function App() {
           </Route>
           <Route element={<AdminRoutePrivate />}>
                 <Route path='/create-post' element={<CreatePost />}></Route>
-              </Route>
+                <Route path='/update-post/:postId' element={<UpdatePost />}></Route>
+          </Route>
           <Route path='/articles' element={<Articles />}></Route>
         </Routes>
         <Footer />

@@ -91,3 +91,29 @@ export const deletePost = async(req, res, next) => {
         next(error)
     }
 }
+
+export const updatePost = async(req, res, next) => {
+    if(!req.user.isAdmin || req.user.id !== req.params.userId) {
+        return res.status(401).json({
+            message : "You do not have permission to update this post"
+        })
+    }
+    try {
+        const slug = req.body.title.split(' ').join('-').toLowerCase().replace(/[^a-zA-Z0-9]/g, '-')
+        const updatePost = await Post.findByIdAndUpdate(
+            req.params.postId, 
+            {
+                $set: {
+                    title : req.body.title,
+                    content : req.body.content,
+                    category : req.body.category,
+                    image : req.body.image,
+                    slug : slug,
+                }
+            }, { new: true }
+        )
+        res.status(200).json(updatePost)
+    } catch (error) {
+        next(error)
+    }
+}
