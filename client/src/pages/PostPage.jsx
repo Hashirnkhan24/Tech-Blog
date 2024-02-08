@@ -1,14 +1,15 @@
 import { Link, useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { Button, Spinner } from 'flowbite-react'
-import { CallToAction } from '../components'
+import { CommentSection } from '../components'
+// import { CallToAction } from '../components'
 
 function PostPage() {
     const { postSlug } = useParams()
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(false)
     const [post, setPost] = useState(null)
-    console.log(post)
+
     useEffect(() => {
         const fetchPost = async() => {
             try {
@@ -54,6 +55,7 @@ function PostPage() {
             {/* <div className='max-w-4xl mx-auto w-full'>
                 <CallToAction />
             </div> */}
+            <CommentSection postId={post._id} />
         </main>
     )
 }
