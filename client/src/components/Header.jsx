@@ -1,16 +1,20 @@
 import { Avatar, Button, Dropdown, Navbar, TextInput } from "flowbite-react"
-import { Link, useLocation } from "react-router-dom"
+import { Link, useLocation, useNavigate } from "react-router-dom"
 import { AiOutlineSearch } from "react-icons/ai"
 import { FaMoon, FaSun } from "react-icons/fa"
 import { useSelector, useDispatch } from "react-redux"
 import { toggleTheme } from "../redux/theme/themeSlice"
 import { signOutSuccess } from '../redux/user/userSlice'
+import { useEffect, useState } from "react"
 
 export default function Header() {
     const { currentUser } = useSelector(state => state.user)
     const { theme } = useSelector(state => state.theme)
     const path = useLocation.pathname;
+    const location = useLocation()
     const dispatch = useDispatch()
+    const navigate = useNavigate()
+    const [searchTerm, setSearchTerm] = useState('')
     
     const handleSignOut = async() => {
         try {
@@ -28,6 +32,22 @@ export default function Header() {
         }
     }
 
+    useEffect(() => {
+        const urlParams = new URLSearchParams(location.search)
+        const searchTermFromUrl = urlParams.get('searchTerm')
+        if(searchTermFromUrl) {
+            setSearchTerm(searchTermFromUrl)
+        }
+    }, [location.search])
+
+    const handleSubmit = (e) => {
+        e.preventDefault()
+        const urlParams = new URLSearchParams(location.search)
+        urlParams.set('searchTerm', searchTerm)
+        const searchQuery = urlParams.toString()
+        navigate(`/search?${searchQuery}`)
+    }
+
     return (
         <Navbar className="border-b-2 shadow-sm">
             {/* Logo */}
@@ -36,16 +56,18 @@ export default function Header() {
                 Blog
             </Link>
             {/* Search Bar */}
-            <form>
+            <form onSubmit={handleSubmit}>
                 <TextInput
                     type="text"
                     placeholder="Search..."
                     rightIcon={AiOutlineSearch}
                     className="hidden md:inline"
                     style={{borderRadius : '2px'}}
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
                 />
             </form>
-            <Button className="rounded-sm md:hidden" color="gray">
+            <Button onClick={() => navigate("/search")} className="rounded-sm md:hidden" color="gray">
                 <AiOutlineSearch className="w-4 h-4"/>
             </Button>
             {/* Theme Toggle Button */}

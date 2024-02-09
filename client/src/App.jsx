@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import { Home, About, SignIn, SignUp, Dashboard, Articles, CreatePost, PostPage } from './pages'
+import { Home, About, SignIn, SignUp, Dashboard, Articles, CreatePost, PostPage, Search } from './pages'
 import { Footer, Header, RoutePrivate, AdminRoutePrivate, ScrollToTop } from './components'
 import UpdatePost from './pages/UpdatePost'
 
@@ -16,6 +16,7 @@ function App() {
           <Route path='/about' element={<About />}></Route>
           <Route path='/sign-in' element={<SignIn />}></Route>
           <Route path='/sign-up' element={<SignUp />}></Route>
+          <Route path='/search' element={<Search />}></Route>
           <Route element={<RoutePrivate />}>
             <Route path='/dashboard' element={<Dashboard />}>
             </Route>

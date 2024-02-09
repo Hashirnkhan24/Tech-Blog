@@ -28,7 +28,7 @@ export default function Home() {
                 </div>
             </div>
             <h1 className='text-2xl md:text-3xl font-semibold text-center self-center'>Recent Posts</h1>
-            <div className=" mr-6 sm:mx-auto px-3 dark:bg-slate-800 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 py-4">
+            <div className="items-center mr-6 sm:mx-auto px-3 dark:bg-slate-800 grid grid-cols-1 md:grid-cols-2 gap-8 py-4">
                 {
                     posts.map((post) => (
                         <PostCard className="self-center" key={post._id} post={post}/>
