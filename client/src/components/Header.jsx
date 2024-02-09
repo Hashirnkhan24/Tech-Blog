@@ -72,7 +72,7 @@ export default function Header() {
             </Button>
             {/* Theme Toggle Button */}
             <div className="flex gap-2 md:order-2">
-                <Button className="w-12 h-10 hidden sm:inline rounded-full bg-gradient-to-r from-red-800 to-red-600" onClick={() => dispatch(toggleTheme())}>
+                <Button className="w-12 h-10 rounded-full bg-gradient-to-r from-red-800 to-red-600" onClick={() => dispatch(toggleTheme())}>
                     {theme === "light" ? <FaSun />: <FaMoon />}
                 </Button>
                 {/* Sign In Button */}
