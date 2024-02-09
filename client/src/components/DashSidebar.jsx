@@ -50,7 +50,7 @@ function DashSidebar() {
                     </Link>
 
                     <Link to="/dashboard?tab=dash" >
-                    <Sidebar.Item active={tab === "dash"} icon={HiDocumentSearch} as="div">
+                    <Sidebar.Item active={tab === "dash" || !tab} icon={HiDocumentSearch} as="div">
                         Dashboard
                     </Sidebar.Item>
                     </Link>
